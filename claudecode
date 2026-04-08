@@ -1,0 +1,2413 @@
+c================================================================================
+MOBILE APPLICATION DEVELOPMENT - COMPLETE CODE REFERENCE
+================================================================================
+All programs compiled for academic/lab use. Simple, working code for each task.
+================================================================================
+
+
+================================================================================
+PROGRAM 1: Android - Change Background Color, Font Style & Font Size on Button Click
+================================================================================
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp"
+    android:id="@+id/mainLayout">
+
+    <TextView
+        android:id="@+id/sampleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello, Android!"
+        android:textSize="18sp"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/btnChangeBg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Background Color"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnChangeFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Font Style"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnChangeFontSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Font Size"/>
+
+</LinearLayout>
+
+--- MainActivity.java ---
+package com.example.styleapp;
+
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    LinearLayout mainLayout;
+    TextView sampleText;
+    Button btnChangeBg, btnChangeFontStyle, btnChangeFontSize;
+
+    int colorIndex = 0;
+    int[] colors = {Color.CYAN, Color.YELLOW, Color.GREEN, Color.LTGRAY, Color.WHITE};
+
+    int styleIndex = 0;
+    int[] styles = {Typeface.NORMAL, Typeface.BOLD, Typeface.ITALIC, Typeface.BOLD_ITALIC};
+
+    int sizeIndex = 0;
+    float[] sizes = {14f, 18f, 22f, 26f, 30f};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mainLayout = findViewById(R.id.mainLayout);
+        sampleText = findViewById(R.id.sampleText);
+        btnChangeBg = findViewById(R.id.btnChangeBg);
+        btnChangeFontStyle = findViewById(R.id.btnChangeFontStyle);
+        btnChangeFontSize = findViewById(R.id.btnChangeFontSize);
+
+        btnChangeBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainLayout.setBackgroundColor(colors[colorIndex % colors.length]);
+                colorIndex++;
+            }
+        });
+
+        btnChangeFontStyle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sampleText.setTypeface(null, styles[styleIndex % styles.length]);
+                styleIndex++;
+            }
+        });
+
+        btnChangeFontSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sampleText.setTextSize(sizes[sizeIndex % sizes.length]);
+                sizeIndex++;
+            }
+        });
+    }
+}
+
+--- AndroidManifest.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.styleapp">
+
+    <application
+        android:allowBackup="true"
+        android:label="StyleApp"
+        android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+--- build.gradle (app level) ---
+plugins {
+    id 'com.android.application'
+}
+android {
+    compileSdk 33
+    defaultConfig {
+        applicationId "com.example.styleapp"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}
+
+
+================================================================================
+PROGRAM 2: Android - Calculator Application
+================================================================================
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="#ECECEC">
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="36sp"
+        android:gravity="end"
+        android:padding="10dp"
+        android:background="#FFFFFF"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Row 1 -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btn7" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="7"/>
+        <Button android:id="@+id/btn8" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="8"/>
+        <Button android:id="@+id/btn9" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="9"/>
+        <Button android:id="@+id/btnDiv" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="/" android:backgroundTint="#FF9800"/>
+    </LinearLayout>
+
+    <!-- Row 2 -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btn4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="4"/>
+        <Button android:id="@+id/btn5" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="5"/>
+        <Button android:id="@+id/btn6" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="6"/>
+        <Button android:id="@+id/btnMul" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="*" android:backgroundTint="#FF9800"/>
+    </LinearLayout>
+
+    <!-- Row 3 -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btn1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="1"/>
+        <Button android:id="@+id/btn2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="2"/>
+        <Button android:id="@+id/btn3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="3"/>
+        <Button android:id="@+id/btnSub" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="-" android:backgroundTint="#FF9800"/>
+    </LinearLayout>
+
+    <!-- Row 4 -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btn0" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="0"/>
+        <Button android:id="@+id/btnDot" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="."/>
+        <Button android:id="@+id/btnClear" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="C" android:backgroundTint="#F44336"/>
+        <Button android:id="@+id/btnAdd" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="+" android:backgroundTint="#FF9800"/>
+    </LinearLayout>
+
+    <!-- Equals -->
+    <Button
+        android:id="@+id/btnEqual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="="
+        android:backgroundTint="#4CAF50"
+        android:textSize="20sp"/>
+
+</LinearLayout>
+
+--- MainActivity.java ---
+package com.example.calculator;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    TextView tvResult;
+    String currentInput = "";
+    double firstNum = 0;
+    String operator = "";
+    boolean newInput = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        tvResult = findViewById(R.id.tvResult);
+
+        int[] btnIds = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
+                R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9,
+                R.id.btnAdd, R.id.btnSub, R.id.btnMul, R.id.btnDiv,
+                R.id.btnEqual, R.id.btnClear, R.id.btnDot};
+
+        for (int id : btnIds) {
+            findViewById(id).setOnClickListener(this);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Button btn = (Button) v;
+        String btnText = btn.getText().toString();
+
+        switch (btnText) {
+            case "C":
+                currentInput = "";
+                firstNum = 0;
+                operator = "";
+                tvResult.setText("0");
+                break;
+
+            case "+": case "-": case "*": case "/":
+                if (!currentInput.isEmpty()) {
+                    firstNum = Double.parseDouble(currentInput);
+                    operator = btnText;
+                    newInput = true;
+                }
+                break;
+
+            case "=":
+                if (!operator.isEmpty() && !currentInput.isEmpty()) {
+                    double secondNum = Double.parseDouble(currentInput);
+                    double result = 0;
+                    switch (operator) {
+                        case "+": result = firstNum + secondNum; break;
+                        case "-": result = firstNum - secondNum; break;
+                        case "*": result = firstNum * secondNum; break;
+                        case "/":
+                            if (secondNum != 0) result = firstNum / secondNum;
+                            else { tvResult.setText("Error"); return; }
+                            break;
+                    }
+                    // Remove .0 if integer
+                    if (result == (long) result)
+                        currentInput = String.valueOf((long) result);
+                    else
+                        currentInput = String.valueOf(result);
+                    tvResult.setText(currentInput);
+                    operator = "";
+                    newInput = false;
+                }
+                break;
+
+            case ".":
+                if (newInput) { currentInput = "0"; newInput = false; }
+                if (!currentInput.contains(".")) currentInput += ".";
+                tvResult.setText(currentInput);
+                break;
+
+            default:
+                if (newInput) { currentInput = ""; newInput = false; }
+                currentInput += btnText;
+                tvResult.setText(currentInput);
+                break;
+        }
+    }
+}
+
+--- AndroidManifest.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.calculator">
+    <application
+        android:allowBackup="true"
+        android:label="Calculator"
+        android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+--- build.gradle (app) ---
+plugins { id 'com.android.application' }
+android {
+    compileSdk 33
+    defaultConfig {
+        applicationId "com.example.calculator"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}
+
+
+================================================================================
+PROGRAM 3: Android - Send Email and Generate Notifications
+================================================================================
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="To:" android:textStyle="bold"/>
+    <EditText android:id="@+id/etTo" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="recipient@email.com"
+        android:inputType="textEmailAddress"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Subject:" android:textStyle="bold" android:layout_marginTop="10dp"/>
+    <EditText android:id="@+id/etSubject" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="Email Subject"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Message:" android:textStyle="bold" android:layout_marginTop="10dp"/>
+    <EditText android:id="@+id/etMessage" android:layout_width="match_parent"
+        android:layout_height="120dp" android:hint="Type your message here"
+        android:gravity="top" android:inputType="textMultiLine"/>
+
+    <Button android:id="@+id/btnSendEmail" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Send Email"
+        android:layout_marginTop="20dp"/>
+
+    <Button android:id="@+id/btnNotify" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Show Notification"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>
+
+--- MainActivity.java ---
+package com.example.emailapp;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etTo, etSubject, etMessage;
+    Button btnSendEmail, btnNotify;
+    private static final String CHANNEL_ID = "mail_channel";
+    private int notifId = 1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etTo = findViewById(R.id.etTo);
+        etSubject = findViewById(R.id.etSubject);
+        etMessage = findViewById(R.id.etMessage);
+        btnSendEmail = findViewById(R.id.btnSendEmail);
+        btnNotify = findViewById(R.id.btnNotify);
+
+        createNotificationChannel();
+
+        btnSendEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String to = etTo.getText().toString().trim();
+                String subject = etSubject.getText().toString().trim();
+                String message = etMessage.getText().toString().trim();
+
+                if (to.isEmpty() || subject.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Fill in To and Subject", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("message/rfc822");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_TEXT, message);
+
+                try {
+                    startActivity(Intent.createChooser(intent, "Send Email via..."));
+                    showNotification("Email Sent", "Your email to " + to + " was sent.");
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, "No email client found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNotification("New Message", "You have received a new message!");
+            }
+        });
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID, "Mail Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Notifications for emails and messages");
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) manager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showNotification(String title, String text) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(android.R.drawable.ic_dialog_email)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (manager != null) manager.notify(notifId++, builder.build());
+    }
+}
+
+--- AndroidManifest.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.emailapp">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <application
+        android:allowBackup="true"
+        android:label="EmailApp"
+        android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+--- build.gradle (app) ---
+plugins { id 'com.android.application' }
+android {
+    compileSdk 33
+    defaultConfig {
+        applicationId "com.example.emailapp"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core:1.10.1'
+}
+
+
+================================================================================
+PROGRAM 4: Android - Library Database Application
+================================================================================
+
+--- DatabaseHelper.java ---
+package com.example.libraryapp;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String DB_NAME = "LibraryDB";
+    private static final int DB_VERSION = 1;
+
+    // Tables
+    public static final String TABLE_BOOKS = "books";
+    public static final String TABLE_STUDENTS = "students";
+    public static final String TABLE_LEND = "lend";
+    public static final String TABLE_RESERVATION = "reservation";
+
+    public DatabaseHelper(Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + TABLE_BOOKS + " (" +
+                "book_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "title TEXT NOT NULL," +
+                "author TEXT," +
+                "available INTEGER DEFAULT 1)");
+
+        db.execSQL("CREATE TABLE " + TABLE_STUDENTS + " (" +
+                "student_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name TEXT NOT NULL," +
+                "roll_no TEXT UNIQUE)");
+
+        db.execSQL("CREATE TABLE " + TABLE_LEND + " (" +
+                "lend_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "book_id INTEGER," +
+                "student_id INTEGER," +
+                "lend_date TEXT," +
+                "return_date TEXT)");
+
+        db.execSQL("CREATE TABLE " + TABLE_RESERVATION + " (" +
+                "res_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "book_id INTEGER," +
+                "student_id INTEGER," +
+                "res_date TEXT)");
+
+        // Seed data
+        db.execSQL("INSERT INTO " + TABLE_BOOKS + " (title, author, available) VALUES ('Java Programming','Schildt',1)");
+        db.execSQL("INSERT INTO " + TABLE_BOOKS + " (title, author, available) VALUES ('Android Dev','Phillips',1)");
+        db.execSQL("INSERT INTO " + TABLE_BOOKS + " (title, author, available) VALUES ('Data Structures','Cormen',0)");
+        db.execSQL("INSERT INTO " + TABLE_STUDENTS + " (name, roll_no) VALUES ('Alice','CS001')");
+        db.execSQL("INSERT INTO " + TABLE_STUDENTS + " (name, roll_no) VALUES ('Bob','CS002')");
+        db.execSQL("INSERT INTO " + TABLE_LEND + " (book_id, student_id, lend_date) VALUES (3,1,'2024-01-10')");
+        db.execSQL("INSERT INTO " + TABLE_RESERVATION + " (book_id, student_id, res_date) VALUES (2,2,'2024-01-12')");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESERVATION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LEND);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS);
+        onCreate(db);
+    }
+
+    public Cursor getAvailableBooks() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT book_id, title, author FROM " + TABLE_BOOKS + " WHERE available=1", null);
+    }
+
+    public Cursor getLentBooks() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(
+                "SELECT b.title, s.name, s.roll_no, l.lend_date FROM " +
+                TABLE_LEND + " l JOIN " + TABLE_BOOKS + " b ON l.book_id=b.book_id " +
+                "JOIN " + TABLE_STUDENTS + " s ON l.student_id=s.student_id", null);
+    }
+
+    public Cursor getReservedBooks() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(
+                "SELECT b.title, s.name, r.res_date FROM " +
+                TABLE_RESERVATION + " r JOIN " + TABLE_BOOKS + " b ON r.book_id=b.book_id " +
+                "JOIN " + TABLE_STUDENTS + " s ON r.student_id=s.student_id", null);
+    }
+
+    public boolean addBook(String title, String author) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("title", title);
+        cv.put("author", author);
+        cv.put("available", 1);
+        return db.insert(TABLE_BOOKS, null, cv) != -1;
+    }
+}
+
+--- activity_main.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Library Management" android:textSize="22sp" android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <Button android:id="@+id/btnAvailable" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Available Books"/>
+    <Button android:id="@+id/btnLent" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Lent Books"/>
+    <Button android:id="@+id/btnReserved" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Reserved Books"/>
+
+    <EditText android:id="@+id/etTitle" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="Book Title"
+        android:layout_marginTop="16dp"/>
+    <EditText android:id="@+id/etAuthor" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="Author"/>
+    <Button android:id="@+id/btnAddBook" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Add Book"/>
+
+    <ListView android:id="@+id/listView" android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="10dp"/>
+
+</LinearLayout>
+
+--- MainActivity.java ---
+package com.example.libraryapp;
+
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    DatabaseHelper db;
+    ListView listView;
+    EditText etTitle, etAuthor;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        db = new DatabaseHelper(this);
+        listView = findViewById(R.id.listView);
+        etTitle = findViewById(R.id.etTitle);
+        etAuthor = findViewById(R.id.etAuthor);
+
+        findViewById(R.id.btnAvailable).setOnClickListener(v -> showAvailable());
+        findViewById(R.id.btnLent).setOnClickListener(v -> showLent());
+        findViewById(R.id.btnReserved).setOnClickListener(v -> showReserved());
+
+        findViewById(R.id.btnAddBook).setOnClickListener(v -> {
+            String title = etTitle.getText().toString().trim();
+            String author = etAuthor.getText().toString().trim();
+            if (title.isEmpty()) { Toast.makeText(this, "Enter title", Toast.LENGTH_SHORT).show(); return; }
+            if (db.addBook(title, author)) {
+                Toast.makeText(this, "Book added!", Toast.LENGTH_SHORT).show();
+                etTitle.setText(""); etAuthor.setText("");
+            }
+        });
+
+        showAvailable();
+    }
+
+    void showAvailable() {
+        Cursor c = db.getAvailableBooks();
+        ArrayList<String> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            list.add(c.getString(1) + " by " + c.getString(2));
+        }
+        c.close();
+        setList("Available Books", list);
+    }
+
+    void showLent() {
+        Cursor c = db.getLentBooks();
+        ArrayList<String> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            list.add(c.getString(0) + " → " + c.getString(1) + " (" + c.getString(2) + ") on " + c.getString(3));
+        }
+        c.close();
+        setList("Lent Books", list);
+    }
+
+    void showReserved() {
+        Cursor c = db.getReservedBooks();
+        ArrayList<String> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            list.add(c.getString(0) + " reserved by " + c.getString(1) + " on " + c.getString(2));
+        }
+        c.close();
+        setList("Reserved Books", list);
+    }
+
+    void setList(String category, ArrayList<String> data) {
+        if (data.isEmpty()) data.add("No records found.");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
+        listView.setAdapter(adapter);
+        Toast.makeText(this, category + ": " + data.size() + " record(s)", Toast.LENGTH_SHORT).show();
+    }
+}
+
+--- AndroidManifest.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.libraryapp">
+    <application
+        android:allowBackup="true"
+        android:label="LibraryApp"
+        android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+--- build.gradle (app) ---
+plugins { id 'com.android.application' }
+android {
+    compileSdk 33
+    defaultConfig {
+        applicationId "com.example.libraryapp"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}
+
+
+================================================================================
+PROGRAM 5: Cordova - User Login Screen
+================================================================================
+Setup commands:
+  npm install -g cordova
+  cordova create LoginApp com.example.loginapp LoginApp
+  cd LoginApp
+  cordova platform add android
+  cordova run android
+
+--- www/index.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Image -->
+        <div class="header">
+            <img src="img/logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+            <h1 class="app-title">Welcome Back</h1>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-card">
+            <label class="form-label">Username</label>
+            <input type="text" id="username" class="form-input" placeholder="Enter username">
+
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-input" placeholder="Enter password">
+
+            <p id="message" class="message"></p>
+
+            <div class="btn-row">
+                <button id="resetBtn" class="btn btn-secondary">Reset</button>
+                <button id="submitBtn" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
+--- www/css/style.css ---
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, sans-serif;
+    background: #F0F4F8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+}
+
+.app-title {
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+}
+
+.form-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 6px;
+    margin-top: 16px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #DDD;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.form-input:focus { border-color: #4A90E2; }
+
+.message {
+    margin-top: 12px;
+    font-size: 14px;
+    text-align: center;
+    min-height: 20px;
+}
+
+.message.error { color: #E53935; }
+.message.success { color: #43A047; }
+
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary { background: #4A90E2; color: #fff; }
+.btn-primary:active { background: #357ABD; }
+.btn-secondary { background: #E0E0E0; color: #333; }
+.btn-secondary:active { background: #BDBDBD; }
+
+--- www/js/app.js ---
+document.addEventListener('deviceready', function () {
+    init();
+}, false);
+
+// Fallback for browser testing
+document.addEventListener('DOMContentLoaded', function () {
+    init();
+});
+
+function init() {
+    var submitBtn = document.getElementById('submitBtn');
+    var resetBtn = document.getElementById('resetBtn');
+    var message = document.getElementById('message');
+
+    submitBtn.addEventListener('click', function () {
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value.trim();
+
+        message.className = 'message';
+
+        if (!username || !password) {
+            message.textContent = 'Please enter both username and password.';
+            message.className = 'message error';
+            return;
+        }
+
+        // Simple hardcoded check (replace with real auth)
+        if (username === 'admin' && password === '1234') {
+            message.textContent = 'Login successful! Welcome, ' + username + '!';
+            message.className = 'message success';
+        } else {
+            message.textContent = 'Invalid username or password.';
+            message.className = 'message error';
+        }
+    });
+
+    resetBtn.addEventListener('click', function () {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        message.textContent = '';
+        message.className = 'message';
+    });
+}
+
+--- config.xml ---
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.loginapp" version="1.0.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>LoginApp</name>
+    <description>Cordova Login Application</description>
+    <author email="dev@example.com">Developer</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+</widget>
+
+--- package.json ---
+{
+  "name": "loginapp",
+  "displayName": "LoginApp",
+  "version": "1.0.0",
+  "description": "Cordova Login App",
+  "main": "index.js",
+  "scripts": {
+    "start": "cordova run android"
+  },
+  "dependencies": {}
+}
+
+
+================================================================================
+PROGRAM 6: Cordova - Find and Display Current Location
+================================================================================
+Setup commands:
+  cordova create LocationApp com.example.locationapp LocationApp
+  cd LocationApp
+  cordova plugin add cordova-plugin-geolocation
+  cordova platform add android
+  cordova run android
+
+--- www/index.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>My Location</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📍 My Location</h1>
+
+        <div class="card" id="locationCard">
+            <p class="info-label">Status</p>
+            <p id="status" class="info-value">Press the button to get location</p>
+
+            <p class="info-label">Latitude</p>
+            <p id="lat" class="info-value">--</p>
+
+            <p class="info-label">Longitude</p>
+            <p id="lon" class="info-value">--</p>
+
+            <p class="info-label">Accuracy</p>
+            <p id="accuracy" class="info-value">--</p>
+        </div>
+
+        <button id="btnGetLocation" class="btn">Get My Location</button>
+        <button id="btnWatch" class="btn btn-secondary">Watch Location</button>
+        <button id="btnStop" class="btn btn-danger" style="display:none;">Stop Watching</button>
+
+        <!-- Embedded map link -->
+        <a id="mapLink" class="map-link" href="#" target="_blank" style="display:none;">
+            🗺️ Open in Google Maps
+        </a>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
+--- www/css/style.css ---
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, sans-serif;
+    background: #E8F5E9;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 26px;
+    color: #2E7D32;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    margin-top: 12px;
+}
+
+.info-value {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: #2E7D32;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.btn-secondary { background: #1565C0; }
+.btn-danger { background: #C62828; }
+
+.map-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+    color: #1565C0;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+--- www/js/app.js ---
+var watchId = null;
+
+document.addEventListener('deviceready', onDeviceReady, false);
+document.addEventListener('DOMContentLoaded', onDeviceReady, false);
+
+function onDeviceReady() {
+    document.getElementById('btnGetLocation').addEventListener('click', getLocation);
+    document.getElementById('btnWatch').addEventListener('click', watchLocation);
+    document.getElementById('btnStop').addEventListener('click', stopWatch);
+}
+
+function getLocation() {
+    setStatus('Getting location...');
+    var options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+}
+
+function watchLocation() {
+    setStatus('Watching location...');
+    document.getElementById('btnStop').style.display = 'block';
+    document.getElementById('btnWatch').style.display = 'none';
+    var options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 };
+    watchId = navigator.geolocation.watchPosition(onSuccess, onError, options);
+}
+
+function stopWatch() {
+    if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+    }
+    document.getElementById('btnStop').style.display = 'none';
+    document.getElementById('btnWatch').style.display = 'block';
+    setStatus('Stopped watching.');
+}
+
+function onSuccess(position) {
+    var lat = position.coords.latitude.toFixed(6);
+    var lon = position.coords.longitude.toFixed(6);
+    var acc = position.coords.accuracy.toFixed(1) + ' meters';
+
+    document.getElementById('lat').textContent = lat;
+    document.getElementById('lon').textContent = lon;
+    document.getElementById('accuracy').textContent = acc;
+    setStatus('Location found!');
+
+    var mapLink = document.getElementById('mapLink');
+    mapLink.href = 'https://www.google.com/maps?q=' + lat + ',' + lon;
+    mapLink.style.display = 'block';
+}
+
+function onError(error) {
+    var msgs = {
+        1: 'Permission denied. Allow location access.',
+        2: 'Position unavailable.',
+        3: 'Timeout. Try again.'
+    };
+    setStatus('Error: ' + (msgs[error.code] || 'Unknown error'));
+}
+
+function setStatus(msg) {
+    document.getElementById('status').textContent = msg;
+}
+
+--- config.xml ---
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.locationapp" version="1.0.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>LocationApp</name>
+    <description>Cordova Location Application</description>
+    <author>Developer</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <plugin name="cordova-plugin-geolocation" spec="^5.0.0" />
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        </config-file>
+    </platform>
+</widget>
+
+--- package.json ---
+{
+  "name": "locationapp",
+  "version": "1.0.0",
+  "dependencies": {
+    "cordova-android": "^12.0.0",
+    "cordova-plugin-geolocation": "^5.0.0"
+  }
+}
+
+
+================================================================================
+PROGRAM 7: Ionic - Recipe Suggestion App
+================================================================================
+Setup commands:
+  npm install -g @ionic/cli
+  ionic start RecipeApp blank --type=angular
+  cd RecipeApp
+  ionic serve  (for browser)
+  ionic capacitor add android
+  ionic capacitor run android
+
+--- src/app/home/home.page.html ---
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-title>🍽️ Recipe Finder</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="floating">Enter Ingredient</ion-label>
+    <ion-input [(ngModel)]="newIngredient" (keyup.enter)="addIngredient()"></ion-input>
+  </ion-item>
+  <ion-button expand="block" color="primary" (click)="addIngredient()">Add Ingredient</ion-button>
+
+  <ion-list *ngIf="ingredients.length > 0">
+    <ion-list-header>Your Ingredients</ion-list-header>
+    <ion-item *ngFor="let item of ingredients; let i = index">
+      {{ item }}
+      <ion-button slot="end" color="danger" fill="clear" (click)="removeIngredient(i)">✕</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" color="success" (click)="findRecipes()" [disabled]="ingredients.length === 0">
+    Find Recipes
+  </ion-button>
+
+  <div *ngFor="let recipe of recipes" class="recipe-card">
+    <h2>{{ recipe.name }}</h2>
+    <p><strong>Ingredients:</strong> {{ recipe.ingredients.join(', ') }}</p>
+
+    <ion-accordion-group>
+      <ion-accordion>
+        <ion-item slot="header">
+          <ion-label>📋 Instructions</ion-label>
+        </ion-item>
+        <div slot="content" class="ion-padding">
+          <ol>
+            <li *ngFor="let step of recipe.instructions">{{ step }}</li>
+          </ol>
+        </div>
+      </ion-accordion>
+      <ion-accordion>
+        <ion-item slot="header">
+          <ion-label>🥗 Nutrition Info</ion-label>
+        </ion-item>
+        <div slot="content" class="ion-padding">
+          <p>Calories: {{ recipe.nutrition.calories }} kcal</p>
+          <p>Protein: {{ recipe.nutrition.protein }}g</p>
+          <p>Carbs: {{ recipe.nutrition.carbs }}g</p>
+          <p>Fat: {{ recipe.nutrition.fat }}g</p>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </div>
+
+  <p *ngIf="searched && recipes.length === 0" style="text-align:center; color:#888; margin-top:20px;">
+    No recipes found. Try adding more ingredients!
+  </p>
+</ion-content>
+
+--- src/app/home/home.page.ts ---
+import { Component } from '@angular/core';
+import { RecipeService } from '../services/recipe.service';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
+})
+export class HomePage {
+  newIngredient = '';
+  ingredients: string[] = [];
+  recipes: any[] = [];
+  searched = false;
+
+  constructor(private recipeService: RecipeService) {}
+
+  addIngredient() {
+    const item = this.newIngredient.trim().toLowerCase();
+    if (item && !this.ingredients.includes(item)) {
+      this.ingredients.push(item);
+    }
+    this.newIngredient = '';
+  }
+
+  removeIngredient(index: number) {
+    this.ingredients.splice(index, 1);
+  }
+
+  findRecipes() {
+    this.recipes = this.recipeService.getRecipes(this.ingredients);
+    this.searched = true;
+  }
+}
+
+--- src/app/services/recipe.service.ts ---
+import { Injectable } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class RecipeService {
+  private allRecipes = [
+    {
+      name: 'Egg Fried Rice',
+      ingredients: ['egg', 'rice', 'onion', 'oil'],
+      instructions: [
+        'Cook rice and let it cool.',
+        'Heat oil in a pan and sauté onions.',
+        'Add rice and stir fry for 2 minutes.',
+        'Push rice to one side, scramble eggs on the other.',
+        'Mix everything together and serve.'
+      ],
+      nutrition: { calories: 350, protein: 12, carbs: 48, fat: 10 }
+    },
+    {
+      name: 'Tomato Omelette',
+      ingredients: ['egg', 'tomato', 'onion', 'oil'],
+      instructions: [
+        'Chop tomatoes and onions finely.',
+        'Beat 2 eggs with salt.',
+        'Heat oil, sauté veggies for 1 minute.',
+        'Pour egg mixture over veggies.',
+        'Cook until set, fold and serve.'
+      ],
+      nutrition: { calories: 200, protein: 14, carbs: 8, fat: 12 }
+    },
+    {
+      name: 'Banana Smoothie',
+      ingredients: ['banana', 'milk'],
+      instructions: [
+        'Peel and slice 2 bananas.',
+        'Add banana slices and 1 cup milk to blender.',
+        'Blend for 30 seconds until smooth.',
+        'Add honey to taste and serve chilled.'
+      ],
+      nutrition: { calories: 180, protein: 5, carbs: 38, fat: 3 }
+    },
+    {
+      name: 'Simple Dal',
+      ingredients: ['lentils', 'onion', 'tomato', 'oil'],
+      instructions: [
+        'Boil lentils until soft.',
+        'Heat oil and sauté onions until golden.',
+        'Add chopped tomatoes and cook for 3 minutes.',
+        'Add boiled lentils and simmer 5 minutes.',
+        'Season with salt and serve with rice.'
+      ],
+      nutrition: { calories: 280, protein: 18, carbs: 40, fat: 5 }
+    },
+    {
+      name: 'Bread Toast with Butter',
+      ingredients: ['bread', 'butter'],
+      instructions: [
+        'Heat a pan or toaster.',
+        'Butter one side of bread slices.',
+        'Toast until golden brown.',
+        'Serve hot.'
+      ],
+      nutrition: { calories: 150, protein: 4, carbs: 22, fat: 6 }
+    }
+  ];
+
+  getRecipes(userIngredients: string[]): any[] {
+    return this.allRecipes.filter(recipe => {
+      const matched = recipe.ingredients.filter(i => userIngredients.includes(i));
+      return matched.length >= 2;
+    });
+  }
+}
+
+--- src/app/home/home.page.scss ---
+.recipe-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  h2 { color: #2E7D32; font-size: 18px; margin-bottom: 8px; }
+}
+
+--- src/app/home/home.module.ts ---
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { HomePageRoutingModule } from './home-routing.module';
+import { HomePage } from './home.page';
+
+@NgModule({
+  imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
+  declarations: [HomePage]
+})
+export class HomePageModule {}
+
+
+================================================================================
+PROGRAM 8: React Native - BMI Calculator (Cross Platform)
+================================================================================
+Setup commands:
+  npx react-native init BMICalculator
+  cd BMICalculator
+  npx react-native run-android
+  npx react-native run-ios
+
+--- App.js ---
+import React, { useState } from 'react';
+import {
+  View, Text, TextInput, TouchableOpacity,
+  StyleSheet, ScrollView, KeyboardAvoidingView, Platform
+} from 'react-native';
+
+const App = () => {
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [bmi, setBmi] = useState(null);
+  const [category, setCategory] = useState('');
+  const [color, setColor] = useState('#333');
+
+  const calculateBMI = () => {
+    const w = parseFloat(weight);
+    const h = parseFloat(height) / 100; // cm to m
+    if (!w || !h || h <= 0) { alert('Please enter valid weight and height.'); return; }
+
+    const result = (w / (h * h)).toFixed(1);
+    setBmi(result);
+
+    if (result < 18.5) { setCategory('Underweight'); setColor('#2196F3'); }
+    else if (result < 25) { setCategory('Normal weight'); setColor('#4CAF50'); }
+    else if (result < 30) { setCategory('Overweight'); setColor('#FF9800'); }
+    else { setCategory('Obese'); setColor('#F44336'); }
+  };
+
+  const reset = () => {
+    setWeight(''); setHeight(''); setBmi(null); setCategory(''); setColor('#333');
+  };
+
+  return (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.flex}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>BMI Calculator</Text>
+        <Text style={styles.subtitle}>Body Mass Index</Text>
+
+        <View style={styles.card}>
+          <Text style={styles.label}>Weight (kg)</Text>
+          <TextInput
+            style={styles.input}
+            value={weight}
+            onChangeText={setWeight}
+            keyboardType="numeric"
+            placeholder="e.g. 70"
+          />
+
+          <Text style={styles.label}>Height (cm)</Text>
+          <TextInput
+            style={styles.input}
+            value={height}
+            onChangeText={setHeight}
+            keyboardType="numeric"
+            placeholder="e.g. 170"
+          />
+
+          <TouchableOpacity style={styles.btnPrimary} onPress={calculateBMI}>
+            <Text style={styles.btnText}>Calculate BMI</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnSecondary} onPress={reset}>
+            <Text style={styles.btnTextDark}>Reset</Text>
+          </TouchableOpacity>
+        </View>
+
+        {bmi && (
+          <View style={[styles.resultCard, { borderColor: color }]}>
+            <Text style={styles.bmiLabel}>Your BMI</Text>
+            <Text style={[styles.bmiValue, { color }]}>{bmi}</Text>
+            <Text style={[styles.bmiCategory, { color }]}>{category}</Text>
+
+            <View style={styles.rangeTable}>
+              <Text style={styles.rangeTitle}>BMI Categories</Text>
+              {[
+                { label: 'Underweight', range: '< 18.5', c: '#2196F3' },
+                { label: 'Normal', range: '18.5 – 24.9', c: '#4CAF50' },
+                { label: 'Overweight', range: '25 – 29.9', c: '#FF9800' },
+                { label: 'Obese', range: '≥ 30', c: '#F44336' },
+              ].map(r => (
+                <View key={r.label} style={styles.rangeRow}>
+                  <View style={[styles.colorDot, { backgroundColor: r.c }]}/>
+                  <Text style={styles.rangeLabel}>{r.label}</Text>
+                  <Text style={styles.rangeValue}>{r.range}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  container: { flexGrow: 1, backgroundColor: '#F5F5F5', padding: 20 },
+  title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#333', marginTop: 20 },
+  subtitle: { fontSize: 16, textAlign: 'center', color: '#888', marginBottom: 24 },
+  card: { backgroundColor: '#fff', borderRadius: 12, padding: 20, marginBottom: 20,
+          shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
+  label: { fontSize: 14, fontWeight: 'bold', color: '#555', marginBottom: 6, marginTop: 12 },
+  input: { borderWidth: 1, borderColor: '#DDD', borderRadius: 8, padding: 12, fontSize: 16 },
+  btnPrimary: { backgroundColor: '#4A90E2', borderRadius: 8, padding: 14, alignItems: 'center', marginTop: 20 },
+  btnSecondary: { backgroundColor: '#E0E0E0', borderRadius: 8, padding: 14, alignItems: 'center', marginTop: 10 },
+  btnText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  btnTextDark: { color: '#333', fontSize: 16, fontWeight: 'bold' },
+  resultCard: { backgroundColor: '#fff', borderRadius: 12, padding: 20, borderWidth: 2,
+               shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
+  bmiLabel: { fontSize: 16, textAlign: 'center', color: '#888' },
+  bmiValue: { fontSize: 56, fontWeight: 'bold', textAlign: 'center' },
+  bmiCategory: { fontSize: 22, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
+  rangeTable: { borderTopWidth: 1, borderTopColor: '#EEE', paddingTop: 16 },
+  rangeTitle: { fontSize: 14, fontWeight: 'bold', color: '#555', marginBottom: 10 },
+  rangeRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
+  colorDot: { width: 12, height: 12, borderRadius: 6, marginRight: 8 },
+  rangeLabel: { flex: 1, fontSize: 14, color: '#333' },
+  rangeValue: { fontSize: 14, color: '#666' },
+});
+
+export default App;
+
+--- package.json ---
+{
+  "name": "BMICalculator",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-native": "0.72.6"
+  }
+}
+
+
+================================================================================
+PROGRAM 9: Cordova - Expense Manager (replacing Flutter)
+================================================================================
+Setup commands:
+  cordova create ExpenseApp com.example.expenseapp ExpenseApp
+  cd ExpenseApp
+  cordova platform add android
+  cordova run android
+
+--- www/index.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Expense Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>💰 Expense Manager</h1>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('add')">Add Entry</button>
+            <button class="tab" onclick="showTab('weekly')">Weekly Report</button>
+        </nav>
+
+        <!-- Add Entry Tab -->
+        <div id="tab-add" class="tab-content active">
+            <div class="form-card">
+                <label>Date</label>
+                <input type="date" id="entryDate">
+
+                <label>Type</label>
+                <select id="entryType">
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+
+                <label>Category</label>
+                <select id="entryCategory">
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label>Amount (₹)</label>
+                <input type="number" id="entryAmount" placeholder="0.00" min="0">
+
+                <label>Note (optional)</label>
+                <input type="text" id="entryNote" placeholder="Description">
+
+                <button class="btn-add" onclick="addEntry()">Add Entry</button>
+            </div>
+
+            <div id="recentList">
+                <h3 style="padding:0 16px;">Recent Entries</h3>
+                <div id="entries"></div>
+            </div>
+        </div>
+
+        <!-- Weekly Report Tab -->
+        <div id="tab-weekly" class="tab-content">
+            <div class="summary-cards">
+                <div class="summary-card income-card">
+                    <p>Total Income</p>
+                    <h2 id="totalIncome">₹0</h2>
+                </div>
+                <div class="summary-card expense-card">
+                    <p>Total Expense</p>
+                    <h2 id="totalExpense">₹0</h2>
+                </div>
+                <div class="summary-card balance-card">
+                    <p>Balance</p>
+                    <h2 id="balance">₹0</h2>
+                </div>
+            </div>
+
+            <h3 style="padding: 0 16px 8px;">Category Breakdown</h3>
+            <div id="categoryBreakdown"></div>
+        </div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
+--- www/css/style.css ---
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #F5F5F5; }
+
+.header {
+    background: #1565C0;
+    color: white;
+    padding: 16px;
+    text-align: center;
+}
+.header h1 { font-size: 22px; }
+
+.tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 2px solid #E0E0E0;
+}
+.tab {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    cursor: pointer;
+    color: #888;
+}
+.tab.active { color: #1565C0; border-bottom: 3px solid #1565C0; font-weight: bold; }
+
+.tab-content { display: none; padding: 16px; }
+.tab-content.active { display: block; }
+
+.form-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+}
+label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-top: 12px; margin-bottom: 4px; }
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #DDD;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.btn-add {
+    width: 100%;
+    padding: 14px;
+    background: #1565C0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 16px;
+    cursor: pointer;
+}
+
+.entry-item {
+    background: #fff;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.entry-info p { font-size: 13px; color: #888; }
+.entry-amount { font-size: 16px; font-weight: bold; }
+.income-amount { color: #2E7D32; }
+.expense-amount { color: #C62828; }
+
+.summary-cards { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.summary-card {
+    flex: 1;
+    min-width: 100px;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+}
+.summary-card p { font-size: 12px; opacity: 0.9; }
+.summary-card h2 { font-size: 20px; margin-top: 4px; }
+.income-card { background: #2E7D32; }
+.expense-card { background: #C62828; }
+.balance-card { background: #1565C0; }
+
+.category-row {
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.category-row .cat-name { font-size: 15px; font-weight: bold; color: #333; }
+.cat-bar-bg { background: #EEE; height: 8px; border-radius: 4px; margin: 6px 0; }
+.cat-bar { height: 8px; border-radius: 4px; background: #1565C0; }
+.cat-amounts { display: flex; justify-content: space-between; font-size: 13px; color: #666; }
+
+--- www/js/app.js ---
+var entries = JSON.parse(localStorage.getItem('entries') || '[]');
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('entryDate').valueAsDate = new Date();
+    renderEntries();
+    renderWeekly();
+});
+
+function showTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'weekly') renderWeekly();
+}
+
+function addEntry() {
+    var date = document.getElementById('entryDate').value;
+    var type = document.getElementById('entryType').value;
+    var category = document.getElementById('entryCategory').value;
+    var amount = parseFloat(document.getElementById('entryAmount').value);
+    var note = document.getElementById('entryNote').value.trim();
+
+    if (!date || !amount || amount <= 0) { alert('Please enter a valid date and amount.'); return; }
+
+    entries.unshift({ date, type, category, amount, note });
+    localStorage.setItem('entries', JSON.stringify(entries));
+    document.getElementById('entryAmount').value = '';
+    document.getElementById('entryNote').value = '';
+    renderEntries();
+    alert('Entry added!');
+}
+
+function renderEntries() {
+    var html = '';
+    var recent = entries.slice(0, 10);
+    if (recent.length === 0) { html = '<p style="text-align:center;color:#888;padding:20px;">No entries yet.</p>'; }
+    recent.forEach(function(e) {
+        var cls = e.type === 'income' ? 'income-amount' : 'expense-amount';
+        var sign = e.type === 'income' ? '+' : '-';
+        html += '<div class="entry-item">' +
+            '<div class="entry-info"><strong>' + e.category + '</strong><p>' + e.date + (e.note ? ' • ' + e.note : '') + '</p></div>' +
+            '<div class="entry-amount ' + cls + '">' + sign + '₹' + e.amount.toFixed(2) + '</div>' +
+            '</div>';
+    });
+    document.getElementById('entries').innerHTML = html;
+}
+
+function renderWeekly() {
+    // Last 7 days
+    var now = new Date();
+    var weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+
+    var weekEntries = entries.filter(function(e) {
+        return new Date(e.date) >= weekAgo;
+    });
+
+    var totalIncome = 0, totalExpense = 0;
+    var catIncome = {}, catExpense = {};
+
+    weekEntries.forEach(function(e) {
+        if (e.type === 'income') {
+            totalIncome += e.amount;
+            catIncome[e.category] = (catIncome[e.category] || 0) + e.amount;
+        } else {
+            totalExpense += e.amount;
+            catExpense[e.category] = (catExpense[e.category] || 0) + e.amount;
+        }
+    });
+
+    document.getElementById('totalIncome').textContent = '₹' + totalIncome.toFixed(2);
+    document.getElementById('totalExpense').textContent = '₹' + totalExpense.toFixed(2);
+    document.getElementById('balance').textContent = '₹' + (totalIncome - totalExpense).toFixed(2);
+
+    // Category breakdown
+    var allCats = new Set([...Object.keys(catIncome), ...Object.keys(catExpense)]);
+    var maxAmt = Math.max(...weekEntries.map(e => e.amount), 1);
+    var html = '';
+
+    allCats.forEach(function(cat) {
+        var inc = catIncome[cat] || 0;
+        var exp = catExpense[cat] || 0;
+        var total = inc + exp;
+        var pct = Math.min((total / (totalIncome + totalExpense || 1)) * 100, 100).toFixed(0);
+        html += '<div class="category-row">' +
+            '<div class="cat-name">' + cat + '</div>' +
+            '<div class="cat-bar-bg"><div class="cat-bar" style="width:' + pct + '%"></div></div>' +
+            '<div class="cat-amounts">' +
+            '<span style="color:#2E7D32">+₹' + inc.toFixed(2) + '</span>' +
+            '<span style="color:#C62828">-₹' + exp.toFixed(2) + '</span>' +
+            '</div></div>';
+    });
+
+    document.getElementById('categoryBreakdown').innerHTML = html || '<p style="color:#888;padding:10px;">No data this week.</p>';
+}
+
+--- config.xml ---
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.expenseapp" version="1.0.0"
+    xmlns="http://www.w3.org/ns/widgets">
+    <name>ExpenseApp</name>
+    <description>Cordova Expense Manager</description>
+    <author>Developer</author>
+    <content src="index.html" />
+    <access origin="*" />
+</widget>
+
+
+================================================================================
+PROGRAM 10: React - Unit Converter (Imperial to Metric)
+================================================================================
+Setup commands:
+  npx create-react-app unit-converter
+  cd unit-converter
+  npm start
+
+--- src/App.js ---
+import React, { useState } from 'react';
+import './App.css';
+
+const conversions = [
+  { name: 'Miles to Kilometers',    from: 'miles',  to: 'km',     factor: 1.60934,  icon: '🛣️' },
+  { name: 'Kilometers to Miles',    from: 'km',     to: 'miles',  factor: 0.621371, icon: '🛣️' },
+  { name: 'Pounds to Kilograms',    from: 'lbs',    to: 'kg',     factor: 0.453592, icon: '⚖️' },
+  { name: 'Kilograms to Pounds',    from: 'kg',     to: 'lbs',    factor: 2.20462,  icon: '⚖️' },
+  { name: 'Fahrenheit to Celsius',  from: '°F',     to: '°C',     factor: null,     icon: '🌡️' },
+  { name: 'Celsius to Fahrenheit',  from: '°C',     to: '°F',     factor: null,     icon: '🌡️' },
+  { name: 'Inches to Centimeters',  from: 'in',     to: 'cm',     factor: 2.54,     icon: '📏' },
+  { name: 'Centimeters to Inches',  from: 'cm',     to: 'in',     factor: 0.393701, icon: '📏' },
+  { name: 'Gallons to Liters',      from: 'gal',    to: 'L',      factor: 3.78541,  icon: '🧪' },
+  { name: 'Liters to Gallons',      from: 'L',      to: 'gal',    factor: 0.264172, icon: '🧪' },
+];
+
+function convert(value, conv) {
+  const n = parseFloat(value);
+  if (isNaN(n)) return '';
+  if (conv.name === 'Fahrenheit to Celsius') return ((n - 32) * 5 / 9).toFixed(4);
+  if (conv.name === 'Celsius to Fahrenheit') return ((n * 9 / 5) + 32).toFixed(4);
+  return (n * conv.factor).toFixed(4);
+}
+
+function App() {
+  const [selected, setSelected] = useState(0);
+  const [input, setInput] = useState('');
+
+  const conv = conversions[selected];
+  const result = convert(input, conv);
+
+  return (
+    <div className="app">
+      <header className="app-header">
+        <h1>Unit Converter</h1>
+        <p>Imperial ↔ Metric</p>
+      </header>
+
+      <div className="converter-box">
+        <label>Select Conversion</label>
+        <select value={selected} onChange={e => { setSelected(Number(e.target.value)); setInput(''); }}>
+          {conversions.map((c, i) => (
+            <option key={i} value={i}>{c.icon} {c.name}</option>
+          ))}
+        </select>
+
+        <div className="input-row">
+          <div className="input-group">
+            <label>Enter {conv.from}</label>
+            <input type="number" value={input} onChange={e => setInput(e.target.value)}
+                   placeholder={`Value in ${conv.from}`}/>
+          </div>
+          <div className="arrow">→</div>
+          <div className="input-group">
+            <label>Result in {conv.to}</label>
+            <input type="text" value={result} readOnly placeholder="Result" className="result-input"/>
+          </div>
+        </div>
+
+        {input && result && (
+          <div className="result-display">
+            {input} {conv.from} = <strong>{result} {conv.to}</strong>
+          </div>
+        )}
+
+        <button className="clear-btn" onClick={() => setInput('')}>Clear</button>
+      </div>
+
+      <div className="quick-ref">
+        <h3>Quick Reference</h3>
+        {conversions.map((c, i) => (
+          <div key={i} className="ref-row" onClick={() => { setSelected(i); setInput(''); }}>
+            <span>{c.icon} {c.name}</span>
+            <span className="ref-factor">
+              {c.factor ? `× ${c.factor}` : 'formula'}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+--- src/App.css ---
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { font-family: Arial, sans-serif; background: #F0F4F8; min-height: 100vh; }
+
+.app { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+.app-header {
+  text-align: center;
+  background: #1565C0;
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.app-header h1 { font-size: 28px; }
+.app-header p { opacity: 0.8; margin-top: 4px; }
+
+.converter-box {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 6px; margin-top: 16px; }
+
+select, input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #DDD;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+select:focus, input:focus { border-color: #1565C0; }
+
+.input-row { display: flex; align-items: flex-end; gap: 12px; margin-top: 16px; }
+.input-group { flex: 1; }
+.arrow { font-size: 24px; color: #1565C0; margin-bottom: 12px; }
+.result-input { background: #F0F4F8; font-weight: bold; color: #1565C0; }
+
+.result-display {
+  background: #E3F2FD;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+  font-size: 18px;
+  color: #1565C0;
+  margin-top: 16px;
+}
+
+.clear-btn {
+  width: 100%;
+  padding: 12px;
+  background: #E0E0E0;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 16px;
+  font-weight: bold;
+  color: #333;
+}
+.clear-btn:hover { background: #BDBDBD; }
+
+.quick-ref {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.quick-ref h3 { margin-bottom: 12px; color: #333; }
+.ref-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #F0F0F0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+.ref-row:hover { color: #1565C0; }
+.ref-factor { color: #888; font-size: 13px; }
+
+--- src/index.js ---
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<React.StrictMode><App /></React.StrictMode>);
+
+--- src/index.css ---
+body { margin: 0; }
+
+--- public/index.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Unit Converter</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+
+--- package.json ---
+{
+  "name": "unit-converter",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
+
+
+================================================================================
+PROGRAM 11: React - To-Do Task Management App
+================================================================================
+Setup commands:
+  npx create-react-app todo-app
+  cd todo-app
+  npm start
+
+--- src/App.js ---
+import React, { useState } from 'react';
+import './App.css';
+
+const CATEGORIES = ['All', 'Work', 'Personal', 'Shopping', 'Health', 'Other'];
+const PRIORITIES = ['Low', 'Medium', 'High'];
+
+function App() {
+  const [tasks, setTasks] = useState([
+    { id: 1, text: 'Buy groceries', category: 'Shopping', priority: 'Medium', done: false, date: today() },
+    { id: 2, text: 'Morning jog', category: 'Health', priority: 'High', done: false, date: today() },
+    { id: 3, text: 'Read chapter 5', category: 'Personal', priority: 'Low', done: true, date: today() },
+  ]);
+  const [text, setText] = useState('');
+  const [category, setCategory] = useState('Personal');
+  const [priority, setPriority] = useState('Medium');
+  const [filter, setFilter] = useState('All');
+  const [showDone, setShowDone] = useState(true);
+  const [editId, setEditId] = useState(null);
+  const [editText, setEditText] = useState('');
+
+  function today() { return new Date().toLocaleDateString(); }
+
+  const addTask = () => {
+    if (!text.trim()) return;
+    setTasks([...tasks, { id: Date.now(), text: text.trim(), category, priority, done: false, date: today() }]);
+    setText('');
+  };
+
+  const toggleDone = id => setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  const deleteTask = id => setTasks(tasks.filter(t => t.id !== id));
+
+  const saveEdit = id => {
+    setTasks(tasks.map(t => t.id === id ? { ...t, text: editText } : t));
+    setEditId(null);
+  };
+
+  const filtered = tasks.filter(t =>
+    (filter === 'All' || t.category === filter) &&
+    (showDone || !t.done)
+  );
+
+  const done = tasks.filter(t => t.done).length;
+  const pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+
+  const priorityColor = { Low: '#4CAF50', Medium: '#FF9800', High: '#F44336' };
+
+  return (
+    <div className="app">
+      <header className="header">
+        <h1>📋 Task Manager</h1>
+        <div className="progress-wrap">
+          <div className="progress-bar" style={{ width: pct + '%' }}></div>
+        </div>
+        <p className="progress-text">{done} of {tasks.length} tasks done ({pct}%)</p>
+      </header>
+
+      {/* Add Task */}
+      <div className="add-card">
+        <input className="task-input" value={text} onChange={e => setText(e.target.value)}
+               placeholder="New task..." onKeyDown={e => e.key === 'Enter' && addTask()}/>
+        <div className="selects-row">
+          <select value={category} onChange={e => setCategory(e.target.value)}>
+            {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c}>{c}</option>)}
+          </select>
+          <select value={priority} onChange={e => setPriority(e.target.value)}>
+            {PRIORITIES.map(p => <option key={p}>{p}</option>)}
+          </select>
+        </div>
+        <button className="btn-add" onClick={addTask}>+ Add Task</button>
+      </div>
+
+      {/* Filters */}
+      <div className="filters">
+        {CATEGORIES.map(c => (
+          <button key={c} className={`filter-btn ${filter === c ? 'active' : ''}`}
+                  onClick={() => setFilter(c)}>{c}</button>
+        ))}
+      </div>
+
+      <div className="toggle-done">
+        <label>
+          <input type="checkbox" checked={showDone} onChange={e => setShowDone(e.target.checked)}/>
+          Show completed tasks
+        </label>
+      </div>
+
+      {/* Task List */}
+      <div className="task-list">
+        {filtered.length === 0 && <p className="empty">No tasks found. 🎉</p>}
+        {filtered.map(task => (
+          <div key={task.id} className={`task-item ${task.done ? 'done' : ''}`}>
+            <div className="task-left">
+              <input type="checkbox" checked={task.done} onChange={() => toggleDone(task.id)}/>
+              <div style={{ flex: 1 }}>
+                {editId === task.id ? (
+                  <input className="edit-input" value={editText}
+                         onChange={e => setEditText(e.target.value)}
+                         onKeyDown={e => e.key === 'Enter' && saveEdit(task.id)}/>
+                ) : (
+                  <p className="task-text">{task.text}</p>
+                )}
+                <div className="task-meta">
+                  <span className="tag">{task.category}</span>
+                  <span className="priority" style={{ color: priorityColor[task.priority] }}>
+                    ● {task.priority}
+                  </span>
+                  <span className="date">{task.date}</span>
+                </div>
+              </div>
+            </div>
+            <div className="task-actions">
+              {editId === task.id ? (
+                <button className="btn-save" onClick={() => saveEdit(task.id)}>✓</button>
+              ) : (
+                <button className="btn-edit" onClick={() => { setEditId(task.id); setEditText(task.text); }}>✏️</button>
+              )}
+              <button className="btn-del" onClick={() => deleteTask(task.id)}>🗑️</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+--- src/App.css ---
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #F5F5F5; min-height: 100vh; }
+
+.app { max-width: 600px; margin: 0 auto; padding-bottom: 40px; }
+
+.header {
+  background: #1565C0;
+  color: white;
+  padding: 24px 20px 16px;
+  text-align: center;
+}
+.header h1 { font-size: 26px; margin-bottom: 12px; }
+
+.progress-wrap {
+  background: rgba(255,255,255,0.3);
+  border-radius: 10px;
+  height: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-bar { height: 10px; background: #80DEEA; border-radius: 10px; transition: width 0.4s; }
+.progress-text { font-size: 13px; opacity: 0.9; }
+
+.add-card {
+  background: white;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.task-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #DDD;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-bottom: 10px;
+  outline: none;
+}
+.task-input:focus { border-color: #1565C0; }
+
+.selects-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.selects-row select { flex: 1; padding: 10px; border: 1px solid #DDD; border-radius: 8px; font-size: 14px; }
+
+.btn-add {
+  width: 100%;
+  padding: 13px;
+  background: #1565C0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn-add:hover { background: #0D47A1; }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #EEE;
+}
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid #DDD;
+  border-radius: 20px;
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+  color: #555;
+}
+.filter-btn.active { background: #1565C0; color: white; border-color: #1565C0; }
+
+.toggle-done {
+  padding: 10px 16px;
+  background: white;
+  font-size: 14px;
+  color: #555;
+  border-bottom: 1px solid #EEE;
+}
+.toggle-done label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+.task-list { padding: 12px 16px; }
+
+.task-item {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  transition: opacity 0.2s;
+}
+.task-item.done { opacity: 0.5; }
+
+.task-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; }
+.task-left input[type=checkbox] { margin-top: 4px; width: 18px; height: 18px; cursor: pointer; }
+
+.task-text { font-size: 15px; color: #333; word-break: break-word; }
+.task-item.done .task-text { text-decoration: line-through; color: #999; }
+
+.task-meta { display: flex; align-items: center; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+.tag { background: #E3F2FD; color: #1565C0; border-radius: 12px; padding: 2px 10px; font-size: 12px; }
+.priority { font-size: 12px; font-weight: bold; }
+.date { font-size: 12px; color: #AAA; }
+
+.task-actions { display: flex; gap: 8px; align-items: center; }
+.btn-edit, .btn-del, .btn-save {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #1565C0;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.empty { text-align: center; color: #888; padding: 30px; font-size: 16px; }
+
+--- src/index.js ---
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<React.StrictMode><App /></React.StrictMode>);
+
+--- src/index.css ---
+body { margin: 0; }
+
+--- public/index.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Task Manager</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+
+--- package.json ---
+{
+  "name": "todo-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
+
+
+================================================================================
+END OF FILE
+================================================================================
+SUMMARY OF ALL 11 PROGRAMS:
+1.  Android  - Background/Font Style/Size changer (Java + XML)
+2.  Android  - Calculator with event listeners (Java + XML)
+3.  Android  - Email sender + Notifications (Java + XML)
+4.  Android  - Library DB app (SQLite, Java + XML)
+5.  Cordova  - Login screen with header image & labels (HTML/CSS/JS)
+6.  Cordova  - Current location finder with Google Maps link (HTML/CSS/JS)
+7.  Ionic    - Recipe suggester with nutrition info (Angular + TypeScript)
+8.  React Native - BMI Calculator cross-platform (JavaScript)
+9.  Cordova  - Expense Manager (replaces Flutter) (HTML/CSS/JS)
+10. React    - Unit Converter Imperial↔Metric (React JSX)
+11. React    - To-Do Task Manager (React JSX)
+================================================================================

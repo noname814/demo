@@ -1,0 +1,416 @@
+==================== ANDROID (JAVA) ====================
+
+1. CHANGE BACKGROUND, FONT STYLE, SIZE
+
+## activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:id="@+id/layout"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:gravity="center"
+ android:orientation="vertical">
+
+```
+<TextView
+    android:id="@+id/txt"
+    android:text="Hello"
+    android:textSize="18sp"/>
+
+<Button
+    android:id="@+id/btn"
+    android:text="Change"/>
+```
+
+</LinearLayout>
+
+## MainActivity.java
+
+package com.example.app;
+
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+```
+boolean changed=false;
+
+protected void onCreate(Bundle b){
+    super.onCreate(b);
+    setContentView(R.layout.activity_main);
+
+    LinearLayout layout=findViewById(R.id.layout);
+    TextView txt=findViewById(R.id.txt);
+    Button btn=findViewById(R.id.btn);
+
+    btn.setOnClickListener(v->{
+        changed=!changed;
+        layout.setBackgroundColor(changed?Color.GRAY:Color.WHITE);
+        txt.setTypeface(null,changed?Typeface.BOLD:Typeface.NORMAL);
+        txt.setTextSize(changed?24:18);
+    });
+}
+```
+
+}
+
+---
+
+2. CALCULATOR
+
+## activity_main.xml
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical"
+ android:padding="16dp">
+
+```
+<EditText android:id="@+id/n1" android:hint="Number 1"/>
+<EditText android:id="@+id/n2" android:hint="Number 2"/>
+
+<Button android:id="@+id/add" android:text="Add"/>
+
+<TextView android:id="@+id/result"/>
+```
+
+</LinearLayout>
+
+## MainActivity.java
+
+package com.example.app;
+
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+```
+protected void onCreate(Bundle b){
+    super.onCreate(b);
+    setContentView(R.layout.activity_main);
+
+    EditText n1=findViewById(R.id.n1);
+    EditText n2=findViewById(R.id.n2);
+    Button add=findViewById(R.id.add);
+    TextView result=findViewById(R.id.result);
+
+    add.setOnClickListener(v->{
+        int a=Integer.parseInt(n1.getText().toString());
+        int b1=Integer.parseInt(n2.getText().toString());
+        result.setText("Result: "+(a+b1));
+    });
+}
+```
+
+}
+
+---
+
+3. EMAIL + NOTIFICATION
+
+## activity_main.xml
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical">
+
+```
+<Button android:id="@+id/email" android:text="Send Email"/>
+<Button android:id="@+id/notif" android:text="Notify"/>
+```
+
+</LinearLayout>
+
+## MainActivity.java
+
+package com.example.app;
+
+import android.app.*;
+import android.content.Intent;
+import android.os.*;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
+public class MainActivity extends AppCompatActivity {
+
+```
+String CH="ch";
+
+protected void onCreate(Bundle b){
+    super.onCreate(b);
+    setContentView(R.layout.activity_main);
+
+    Button email=findViewById(R.id.email);
+    Button notif=findViewById(R.id.notif);
+
+    if(Build.VERSION.SDK_INT>=26){
+        NotificationChannel c=new NotificationChannel(CH,"ch",NotificationManager.IMPORTANCE_HIGH);
+        getSystemService(NotificationManager.class).createNotificationChannel(c);
+    }
+
+    email.setOnClickListener(v->{
+        Intent i=new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        startActivity(Intent.createChooser(i,"Send"));
+    });
+
+    notif.setOnClickListener(v->{
+        NotificationCompat.Builder b1=new NotificationCompat.Builder(this,CH)
+                .setContentTitle("Mail")
+                .setContentText("New Message")
+                .setSmallIcon(android.R.drawable.ic_dialog_email);
+
+        ((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(1,b1.build());
+    });
+}
+```
+
+}
+
+---
+
+4. DATABASE LIBRARY
+
+## activity_main.xml
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical">
+
+```
+<ListView android:id="@+id/list"/>
+<Button android:id="@+id/load" android:text="Load"/>
+<Button android:id="@+id/lend" android:text="Lend"/>
+<Button android:id="@+id/reserve" android:text="Reserve"/>
+```
+
+</LinearLayout>
+
+## MainActivity.java
+
+package com.example.app;
+
+import android.database.*;
+import android.database.sqlite.*;
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.*;
+
+public class MainActivity extends AppCompatActivity {
+
+```
+SQLiteDatabase db;
+ListView list;
+
+protected void onCreate(Bundle b){
+    super.onCreate(b);
+    setContentView(R.layout.activity_main);
+
+    list=findViewById(R.id.list);
+
+    db=openOrCreateDatabase("lib",MODE_PRIVATE,null);
+    db.execSQL("CREATE TABLE IF NOT EXISTS books(id INTEGER,name TEXT,status TEXT)");
+    db.execSQL("INSERT INTO books VALUES(1,'Java','Available')");
+
+    findViewById(R.id.load).setOnClickListener(v->load());
+    findViewById(R.id.lend).setOnClickListener(v->update("Lent"));
+    findViewById(R.id.reserve).setOnClickListener(v->update("Reserved"));
+}
+
+void load(){
+    ArrayList<String> arr=new ArrayList<>();
+    Cursor c=db.rawQuery("SELECT * FROM books",null);
+    while(c.moveToNext()){
+        arr.add(c.getString(1)+"-"+c.getString(2));
+    }
+    list.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_single_choice,arr));
+    list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+}
+
+void update(String s){
+    int p=list.getCheckedItemPosition();
+    if(p==-1)return;
+    db.execSQL("UPDATE books SET status='"+s+"' WHERE id="+(p+1));
+    load();
+}
+```
+
+}
+
+========================================================
+
+==================== CORDOVA ====================
+
+5. LOGIN
+
+## index.html
+
+<!DOCTYPE html>
+
+<html>
+<body>
+<img src="img.png" width="100">
+<h2>Login</h2>
+<input id="u" placeholder="Username"><br>
+<input id="p" placeholder="Password"><br>
+<button onclick="login()">Submit</button>
+<button onclick="reset()">Reset</button>
+
+<script src="js/index.js"></script>
+
+</body>
+</html>
+
+## js/index.js
+
+function login(){
+alert("Login Successful");
+}
+function reset(){
+document.getElementById("u").value="";
+document.getElementById("p").value="";
+}
+
+---
+
+6. LOCATION
+
+## index.html
+
+<button onclick="loc()">Get Location</button>
+
+<p id="out"></p>
+<script src="js/index.js"></script>
+
+## js/index.js
+
+function loc(){
+navigator.geolocation.getCurrentPosition(p=>{
+document.getElementById("out").innerHTML=
+p.coords.latitude+","+p.coords.longitude;
+});
+}
+
+========================================================
+
+==================== IONIC ====================
+
+7. RECIPE
+
+## home.page.html
+
+<ion-header><ion-title>Recipe</ion-title></ion-header> <ion-content>
+<input [(ngModel)]="item">
+<button (click)="show()">Suggest</button>
+
+<p>{{res}}</p>
+</ion-content>
+
+## home.page.ts
+
+export class HomePage{
+item="";
+res="";
+show(){
+this.res="Cook "+this.item+" with spices";
+}
+}
+
+========================================================
+
+==================== REACT NATIVE ====================
+
+8. BMI
+
+## App.js
+
+import React,{useState} from 'react';
+import {View,TextInput,Button,Text} from 'react-native';
+
+export default function App(){
+const[w,setW]=useState("");
+const[h,setH]=useState("");
+const[b,setB]=useState("");
+
+return( <View> <TextInput placeholder="Weight" onChangeText={setW}/> <TextInput placeholder="Height" onChangeText={setH}/>
+<Button title="Calc" onPress={()=>setB(w/(h*h))}/> <Text>{b}</Text> </View>
+);
+}
+
+========================================================
+
+==================== CORDOVA (EXPENSE) ====================
+
+9. EXPENSE MANAGER
+
+## index.html
+
+<input id="amt">
+<button onclick="add()">Add</button>
+<ul id="list"></ul>
+<script src="js/index.js"></script>
+
+## js/index.js
+
+function add(){
+let v=document.getElementById("amt").value;
+let li=document.createElement("li");
+li.innerText=v;
+document.getElementById("list").appendChild(li);
+}
+
+========================================================
+
+==================== REACT ====================
+
+10. UNIT CONVERTER
+
+## App.js
+
+import {useState} from "react";
+
+function App(){
+const[km,setKm]=useState(0);
+return(
+
+<div>
+<input onChange={e=>setKm(e.target.value)}/>
+<p>{km*0.62} miles</p>
+</div>
+);
+}
+export default App;
+
+---
+
+11. TODO
+
+## App.js
+
+import {useState} from "react";
+
+function App(){
+const[t,setT]=useState("");
+const[l,setL]=useState([]);
+
+return(
+
+<div>
+<input onChange={e=>setT(e.target.value)}/>
+<button onClick={()=>setL([...l,t])}>Add</button>
+<ul>
+{l.map((x,i)=><li key={i}>{x}</li>)}
+</ul>
+</div>
+);
+}
+export default App;
+
+========================================================
